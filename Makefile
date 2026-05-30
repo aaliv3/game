@@ -4,14 +4,14 @@ JAVAC = javac
 
 all: run depcheck
 
-depcheck: depcheck.sh
+depcheck: src/depcheck.sh
 	./$^ $(JAVAV)
 
 # im lazy
-Main.class: Main.class depcheck
-	$(JAVAC) *.java
+Main.class: src/Main.class depcheck
+	$(JAVAC) src/*.java
 
-run: Main.java depcheck
+run: src/Main.java depcheck
 	$(JAVA) $^
 
 clean:
