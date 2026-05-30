@@ -4,7 +4,7 @@ JAVAC = javac
 
 all: run depcheck
 
-depcheck: src/depcheck.sh
+depcheck: depcheck.sh
 	./$^ $(JAVAV)
 
 # im lazy
