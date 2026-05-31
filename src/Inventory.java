@@ -17,7 +17,7 @@ public class Inventory {
 
     //Player can check on inventory
     public void showInventory() {
-       //Will break out if nothing is in inventory
+        //Will break out if nothing is in inventory
         if (items.isEmpty()) { // better way of checking if inventory is empty instead of 
             System.out.println("Inventory is empty");
             return;
@@ -29,7 +29,10 @@ public class Inventory {
         }
 
     }
-
+    
+    public boolean hasItem(String checkItem) {
+        return items.contains(checkItem);
+    }
 
     //Check index number user entered and makes sure it is an index that exists.
     public void useItem(int index, Player player) {
@@ -60,4 +63,9 @@ public class Inventory {
         }
 
     }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
+
 }

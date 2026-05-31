@@ -6,6 +6,7 @@ public class Room {
     private String roomName; // room name
     private String roomDescription; // when the player first visits the room
     private String updatedRoomDescription; // for when the player has visited the room/completed some requirements for description to change (defeated enemy/picked up item)
+    private String requiredKey;
     private Items items; // what item is in that room
     private Enemy enemy; // which enemy is in that room
     private NPC npc; // which npc is in that room
@@ -43,13 +44,24 @@ public class Room {
     public Enemy getEnemy() {
         return enemy;
     }
+
     public void setEnemy(Enemy enemy) {
         this.enemy = enemy;
     }
 
+    public void setNeedsKey(String requiredKey) {
+        this.requiredKey = requiredKey;
+    }
+    
+    public String getKeyNeeded() {
+        return requiredKey;
+    }
+    
+
     public NPC getNpc() {
         return npc;
     }
+
     public void setNpc(NPC npc) {
         this.npc = npc;
     }

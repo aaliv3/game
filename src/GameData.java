@@ -93,8 +93,9 @@ public class GameData {
                 "An empty room with the corpse of a goblin.");
 
         map[2][1] = new Room("Locked Hallway.",
-                "A locked door blocks your path. Perhaps you could find a key somewhere else.",
+                "A locked door blocks your path.",
                 "The door is now open. You are free to pass through.");
+        map[2][1].setNeedsKey("Hallway Key");
 
         map[1][1] = new Room("Hallway",
                 "An empty corridor with a path to the left and right.",
@@ -116,22 +117,25 @@ public class GameData {
                 "",
                 "");
 
-        map[3][1].setItems(new Items("Broken Sword", "Flimsy Broken Sword", 5, 0));
-        map[3][2].setItems(new Items("Hallway Key", "", 0, 0));
-        map[1][0].setItems(new Items("Healing Potion", "Healing Potion that will restore 60 health", 0, 60));
-        map[1][2].setItems(new Items("Golden Key", "Key to unlock dungeon exit", 0, 0));
+        //Have added this to the npc instead, so that the npc can give it to the player after speaking.
+        //map[3][1].setItems(new Items("Broken Sword", "Flimsy Broken Sword", 5, 0));
 
-        map[3][1].setNpc(new NPC("", "", "", false));
+        map[3][1].setNpc(new NPC("Wise Old Man", "Hello traveller, looks like you could use some help on your journey.Take this...", "Go use that sword for good!", false,new Items("Broken Sword", "Flimsy Broken Sword", 5, 0)));
+        map[1][0].setNpc(new NPC("Potion Master", "Hello there, you seem to have been injured on your adventure. This might be helpful", "Make sure to use that potion in bottle",false,new Items("Healing Potion", "Healing Potion that will restore 60 health", 0, 60)));
 
-        map[3][2].setEnemy(new Enemy("FirstEnemy", 30, 20));
-        map[1][2].setEnemy(new Enemy("SecondsEnemy", 50, 35));
-        map[0][2].setEnemy(new Enemy("FinalBoss", 200, 40));
+        map[3][2].setEnemy(new Enemy("FirstEnemy", 30, 20, new Items("Hallway Key", "Key to unlock dungeon exit", 0, 0)));
+        map[1][2].setEnemy(new Enemy("SecondsEnemy", 50, 35, new Items("Golden Sword", "Strong Golden Sword", 20, 0)));
+        map[0][2].setEnemy(new Enemy("FinalBoss", 200, 40, new Items("Golden Key", "Key to unlock dungeon exit", 0, 0)));
 
     }
 
     private Room getCurrentRoom() {
         return map[player.getRow()][player.getColumn()];
     }
+
+    private boolean isRoomLocked(Room currentRoom, Player player, String requiredKey) {
+        return (!player.getInventory().hasItem(requiredKey) && !(currentRoom.getKeyNeeded() == null));
+    } // if the player doesnt have required key and the room needs a key return true
 
     private void movePlayer(String direction) {
 
@@ -142,6 +146,13 @@ public class GameData {
                 case "n":
                     if (row > 0 && map[row - 1][column] != null) {
                         player.moveNorth();
+                        if (isRoomLocked(getCurrentRoom(), player, getCurrentRoom().getKeyNeeded())) {
+                            System.out.println("This room is locked, Perhaps you could find a key somewhere else.");
+                            System.out.println("Returning to revious room.");
+                            player.moveSouth();
+                            break;
+                        }
+                        
                     } else {
                         System.out.println("You cannot go north.");
                     }
@@ -150,6 +161,13 @@ public class GameData {
                 case "s":
                     if (row < map.length -1 && map[row + 1][column] != null) {
                         player.moveSouth();
+                        if (isRoomLocked(getCurrentRoom(), player, getCurrentRoom().getKeyNeeded())) {
+                            System.out.println("This room is locked, Perhaps you could find a key somewhere else.");
+                            System.out.println("Returning to revious room.");
+                            player.moveNorth();
+                            break;
+                        }
+                        
                     } else {
                         System.out.println("You cannot go south.");
                     }
@@ -158,6 +176,13 @@ public class GameData {
                 case "e":
                     if (column < map[0].length - 1 && map[row][column + 1] != null) {
                         player.moveEast();
+                        if (isRoomLocked(getCurrentRoom(), player, getCurrentRoom().getKeyNeeded())) {
+                            System.out.println("This room is locked, Perhaps you could find a key somewhere else.");
+                            System.out.println("Returning to revious room.");
+                            player.moveWest();
+                            break;
+                        }
+                        
                     } else {
                         System.out.println("You cannot go east.");
                     }
@@ -166,6 +191,13 @@ public class GameData {
                 case "w":
                     if (column > 0 && map[row][column - 1] != null) {
                         player.moveWest();
+                        if (isRoomLocked(getCurrentRoom(), player, getCurrentRoom().getKeyNeeded())) {
+                            System.out.println("This room is locked, Perhaps you could find a key somewhere else.");
+                            System.out.println("Returning to revious room.");
+                            player.moveEast();
+                            break;
+                        }
+                        
                     } else {
                         System.out.println("You cannot go west.");
                     }
@@ -187,22 +219,39 @@ public class GameData {
     }
 
     private void talkToNpc() {
-
         Room room = getCurrentRoom();
 
-        if (room.getNpc() != null) {
-            // talk to npc
-        }
-        else {
+        if (room.getNpc() == null) {
             System.out.println("There is nobody here.");
+            return;
         }
+
+        //Prints first dialogue until spoken to.
+        NPC npc = room.getNpc();
+        System.out.println(npc.getDialogue());
+
+        //Check is the npc hasn't givenreward and if they have an item. If so this runs
+        if(!npc.isRewardGiven() && npc.getReward() != null) {
+            room.setItems(npc.getReward());
+            npc.setRewardGiven(true);
+
+            System.out.println("A " + npc.getReward().getItemName() + " has been placed onto the floor in front of you");
+        }
+
     }
 
     private void fightEnemy() {
         Room room = getCurrentRoom();
 
-        if (room.getEnemy() != null) {
+        if (room.getEnemy() != null && !room.getEnemy().isDefeated()) {
             Combat.combat(player, room.getEnemy());
+
+            if(room.getEnemy().isDefeated()) {
+                room.setItems(room.getEnemy().getRewardItem());
+
+                System.out.println(room.getEnemy().getRewardItem().getItemName() + " has dropped onto the floor in front of you");
+            }
+
         } else {
             System.out.println("There is no enemy to fight.");
         }
@@ -217,7 +266,10 @@ public class GameData {
                 new ProcessBuilder("clear").inheritIO().start().waitFor();
             } // creates a process, connects to your terminal, starts the process, waits for the command to complete
         } catch (IOException | InterruptedException e) {
-            System.out.println("Could not clear screen, please run in windows terminal or bash terminal");
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
+            System.out.println("Please run in windows terminal or bash terminal");
         }
     }
 
