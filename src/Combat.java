@@ -53,7 +53,7 @@ public class Combat {
                 else {
                     System.out.println("What item number would you like to use/equip?");
                     player.inventory.showInventory();
-                    int itemNumber = scanner.nextInt();
+                    int itemNumber = scanner.nextInt() -1;
                     scanner.nextLine(); //Was creating extra inputs, this fixs
                     player.inventory.useItem(itemNumber, player);
                 }
@@ -78,6 +78,5 @@ public class Combat {
         if (player.getHealth() <= 0) {
             System.out.println("You have died in combat to " + enemy.getName() + "!");
         }
-
     }
 }

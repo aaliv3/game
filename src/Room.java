@@ -10,6 +10,7 @@ public class Room {
     private Items items; // what item is in that room
     private Enemy enemy; // which enemy is in that room
     private NPC npc; // which npc is in that room
+    private boolean completed = false;
 
     // Constructor
     // missing npc hasMeet from constructor, might cause future issues, we will see..
@@ -26,11 +27,17 @@ public class Room {
     }
     
     public String getRoomDescription() {
+        if(completed) {
+            return updatedRoomDescription;
+        }
         return roomDescription;
     }
-    
-    public String getUpdatedRD() { // getUpdatedRoomDescription, RD short for RoomDescription
-        return updatedRoomDescription;
+
+    public boolean isCompleted() {
+        return completed;
+    }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     // Not all rooms have items/enemy/npc, so created setter methods for them instead of being in constructor

@@ -25,13 +25,18 @@ public class Inventory {
         //Else will print each invenotry item 1 by 1
         System.out.println("Inventory:");
         for (int i = 0; i < items.size(); i++) {
-            System.out.println(i + ": " + items.get(i));
+            System.out.println((i+1) + ": " + items.get(i));
         }
 
     }
     
     public boolean hasItem(String checkItem) {
-        return items.contains(checkItem);
+        for (Items item : items) {
+            if (item.getItemName().equals(checkItem)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Check index number user entered and makes sure it is an index that exists.
