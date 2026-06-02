@@ -8,7 +8,7 @@
 # skip if already verified
 if [ -e ".java" ];then
 	echo "Already verified java versions"
-	return 0;
+	exit 0;
 fi
 
 # must be run with java version
@@ -36,7 +36,6 @@ reqinst(){
 	local com=$1
 	if ! isinst $com; then
 		echo "$com is not installed."
-		exit 1;
 	fi
 	return 0;
 }
