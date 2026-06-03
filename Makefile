@@ -9,6 +9,9 @@ all: run depcheck
 depcheck: depcheck.sh
 	./$^ $(JAVAV)
 
+rmdepcheck: .java
+	rm .java
+
 # im lazy
 build: $(SRC_DIR)/Main.java depcheck
 	$(JAVAC) src/*.java

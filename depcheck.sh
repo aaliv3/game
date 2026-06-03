@@ -76,25 +76,17 @@ reqinst "javac"
 
 # Check java version
 if chkver "java --version | head -n 1" $JAVA_VERSION;
-then echo "java version verified.";
+then echo "java version verified; $JAVA_VERSION";
 else
 	echo "Please use java: $JAVA_VERSION"
-	
-	# Disallow other java versions.
-	# remove this as im sure it will
-	# get annoying
 	exit 1;
 fi
 
 # Check javac version
 if chkver "javac --version" $JAVAC_VERSION;
-then echo "javac version verified.";
+then echo "javac version verified; $JAVAC_VERSION";
 else
 	echo "Please use javac: $JAVAC_VERSION"
-	
-	# Disallow other java versions.
-	# remove this as im sure it will
-	# get annoying
 	exit 1;
 fi
 
