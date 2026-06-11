@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 
+/**
+ * Methods for using items, checking inventory, adding items to inventory, etc.
+ */
+
 //Created an Inventory class to clear clutter from Player class
 public class Inventory {
 
@@ -22,14 +26,19 @@ public class Inventory {
             System.out.println("Inventory is empty");
             return;
         }
-        //Else will print each invenotry item 1 by 1
+        //Else will print each inventory item 1 by 1
         System.out.println("Inventory:");
         for (int i = 0; i < items.size(); i++) {
             System.out.println((i+1) + ": " + items.get(i));
         }
 
     }
-    
+
+    /**
+     * Checking if the player has a specific item
+     * @param checkItem The item that is being checked for
+     * @return True if the item is found
+     */
     public boolean hasItem(String checkItem) {
         for (Items item : items) {
             if (item.getItemName().equals(checkItem)) {
@@ -39,6 +48,11 @@ public class Inventory {
         return false;
     }
 
+    /**
+     * Using an item in battle
+     * @param index The item slot that is trying to be used
+     * @param player The Player to heal if healing item is being used
+     */
     //Check index number user entered and makes sure it is an index that exists.
     public void useItem(int index, Player player) {
         if (index < 0 || index >= items.size()) {

@@ -57,10 +57,16 @@ public class Player {
         }
     }
 
-   //Moved into Player class, instead of inventory.
+
+    /**
+     * Used for healing the player (usually with an item)
+     * @param amount The amount that the item is healing for
+     */
+    //Moved into Player class, instead of inventory.
     //I was getting issues trying to call player.health from inventory and modifying it there
     public void heal(int amount) {
         health += amount;
+        // Prevents the player's health from exceeding 100
         if (health > 100) {
             health = 100;
         }

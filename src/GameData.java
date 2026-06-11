@@ -1,12 +1,15 @@
 import java.util.Scanner;
 
-// initalising game data
-// instead of initalising all game data in the main method
+/**
+ * Main game functionality and loop contained here
+ * This will be run by the Main class
+ */
 public class GameData {
     private Room[][] map;
     private Player player;
     private Boolean gameRunning;
 
+    // The main loop while navigating the game map
     public void start() {
         clearScreen();
         map = new Room[4][4];
@@ -21,7 +24,7 @@ public class GameData {
         player = new Player(playerName);
         printInstructions();
 
-        while (gameRunning && player.getHealth() > 0) { // main running loop
+        while (gameRunning && player.getHealth() > 0) { // main game loop
             Room currentRoom = getCurrentRoom();
             System.out.println(currentRoom.getRoomDescription());
 
@@ -73,14 +76,19 @@ public class GameData {
         }
     }
 
+    /*
+     * This method generates the rooms for the game.
+     * Each room is given a name, description, and updated description for use upon completion
+     * NPCs and Enemys are also set for each room that contains them
+     */
     private void createMap() {
 
         map[3][0] = new Room("Castle Entrance",
                 "The grand gates leading into the castle.",
-                "The gates have now shut, there is no turning back.");
+                "The gates have now shut,\n there is no turning back.");
 
         map[3][1] = new Room("Lobby",
-                "An open lobby with a branching path. There is an old man beckoning you over.",
+                "An open lobby with a branching path.\n There is an old man beckoning you over.",
                 "The old man is still there.");
 
         map[3][2] = new Room("FirstBossRoom",
@@ -89,7 +97,7 @@ public class GameData {
 
         map[2][1] = new Room("Locked Hallway.",
                 "A locked door blocks your path.",
-                "The door is now open. You are free to pass through.");
+                "The door is now open.\n You are free to pass through.");
         map[2][1].setNeedsKey("Hallway Key");
 
         map[1][1] = new Room("Hallway",
@@ -97,38 +105,48 @@ public class GameData {
                 "The hallway is still empty.");
 
         map[1][0] = new Room("Brewery",
-                "Broken vials and brewing equipment lie all over. There is one remaining health potion.",
+                "Broken vials and brewing equipment lie \n all over. A potion master lies in the \n roubles, on his last breath \n",
                 "Nothing remains but a mess the goblins left behind.");
 
         map[1][2] = new Room("SecondEnemyRoom",
-                "A large troll blocks your way. Your only option is to fight.",
-                "The trolls corpse lies in the corner.");
+                "A large Goblin blocks your way.\n Your only option is to fight.",
+                "The trolls corpse lies in the corner.\n");
 
         map[0][2] = new Room("King's Throne",
-                "The Dead King stands before you. This is it.",
-                "The corpse of your enemy is sat lifeless on the throne. You did it.");
-        map[0][2].setNeedsKey("Golden Key");
+                "The Dead King stands before you.\n A locked treasure room awaits.\n The candle lights glimmer off the\n Golden key around the dead king's neck\n",
+                "The dead king takes its last \n breath on the throne. \n You have completed the game. \n ");
+
 
         map[0][3] = new Room("Treasure Room",
-                "",
-                "");
+                " The treasure room is locked, \nperhaphs the dead king has the key!",
+                " You have slain the dead king and \n claimed the dungeon's treasures for your own!\n");
+        map[0][3].setNeedsKey("Golden Key");
 
         //Have added this to the npc instead, so that the npc can give it to the player after speaking.
         //map[3][1].setItems(new Items("Broken Sword", "Flimsy Broken Sword", 5, 0));
 
-        map[3][1].setNpc(new NPC("Wise Old Man", "Hello traveller, you look brave enough. \n You must entail on a mission to slay \n the dead king .Looks like you could \n use some help on your journey.\n Take this sword, you will need it! \n", "Go use that sword on that goblin! take his key and unlock this door. \n", false,new Items("Broken Sword", "Flimsy Broken Sword", 5, 0)));
-        map[1][0].setNpc(new NPC("Potion Master", "Hello there, you seem to have been injured on your adventure. This might be helpful", "Make sure to use that potion in bottle",false,new Items("Healing Potion", "Healing Potion that will restore 60 health", 0, 60)));
+        map[3][1].setNpc(new NPC("Wise Old Man", "Hello traveller, you look brave enough. \n You must entail on a mission to slay \n the dead king .Looks like you could \n use some help on your journey.\n Take this sword, you will need it! \n", "Go use that sword on that goblin!\n take his key and unlock this door. \n", false,new Items("Broken Sword", "Flimsy Broken Sword", 5, 0)));
+        map[1][0].setNpc(new NPC("Potion Master", "You must slay the dead king and his goblin army!\n He has claimed these dungeons for himself!\n Here take this potion of healing,\n with this you can defeat \nthe dead king and his goblins.\n", "Make sure to use the healing \npotion in the battle! A rich reward awaits you!\n",false,new Items("Healing Potion", "Healing Potion that will restore 60 health", 0, 60)));
 
-        map[3][2].setEnemy(new Enemy("FirstEnemy", 30, 20, new Items("Hallway Key", "Key to unlock dungeon exit", 0, 0)));
-        map[1][2].setEnemy(new Enemy("SecondsEnemy", 50, 35, new Items("Golden Sword", "Strong Golden Sword", 20, 0)));
-        map[0][2].setEnemy(new Enemy("FinalBoss", 200, 40, new Items("Golden Key", "Key to unlock dungeon exit", 0, 0)));
+        map[3][2].setEnemy(new Enemy("Goblin", 20, 10, new Items("Hallway Key", "Key to unlock dungeon exit", 0, 0)));
+        map[1][2].setEnemy(new Enemy("Large Goblin", 30, 15, new Items("Golden Sword", "Strong Golden Sword", 20, 0)));
+        map[0][2].setEnemy(new Enemy("The Dead King", 40, 20, new Items("Golden Key", "Key to unlock dungeon exit", 0, 0)));
 
     }
 
+    /**
+     * Checks which room the Player is currently in using an array
+     * @return Current Player position
+     */
     private Room getCurrentRoom() {
         return map[player.getRow()][player.getColumn()];
     }
 
+    /**
+     * Checking if a given room is locked and requires a key
+     * @param room The room being checked
+     * @return Whether the player has the required item
+     */
     private boolean isRoomLocked(Room room) {
         String keyNeeded = room.getKeyNeeded();
         if (keyNeeded != null && !player.getInventory().hasItem(keyNeeded)) {
@@ -140,6 +158,10 @@ public class GameData {
         
     } // if the player doesnt have required key and the room needs a key return true
 
+    /**
+     * Method used for move the player to a new room if input is N/E/S/W
+     * @param direction Which direction the Player is trying to move (N/E/S/W)
+     */
     private void movePlayer(String direction) {
 
         int row = player.getRow();
@@ -147,13 +169,20 @@ public class GameData {
 
         switch (direction) {
                 case "n":
+
+                    // Making sure there is a room where the player if trying to move to,
+                    // and that they are still within the confines of the map array
                     if (row > 0 && map[row - 1][column] != null) {
                         Room nextRoom = map[row - 1][column];
                         // System.out.println("Key needed: '" + nextRoom.getKeyNeeded() + "'"); debug
                         // System.out.println("Has key: " + player.getInventory().hasItem(nextRoom.getKeyNeeded())); debug
+
                         if (isRoomLocked(nextRoom)) {
-                            System.out.println("This room is locked, Perhaps you could find a key somewhere else.");
-                            System.out.println("Returning to revious room.");
+                            if (getCurrentRoom() == map[1][2])
+                                System.out.println("The troll is blocking your path, you must fight to proceed.");
+                            else
+                                System.out.println("This room is locked, Perhaps you could find a key somewhere else.");
+                            System.out.println("Returning to previous room.");
                             break;
                         }
                         player.moveNorth();
@@ -174,6 +203,15 @@ public class GameData {
 
                 case "e":
                     if (column < map[0].length - 1 && map[row][column + 1] != null) {
+                        Room nextRoom = map[row][column + 1];
+                        // System.out.println("Key needed: '" + nextRoom.getKeyNeeded() + "'"); debug
+                        // System.out.println("Has key: " + player.getInventory().hasItem(nextRoom.getKeyNeeded())); debug
+
+                        if (isRoomLocked(nextRoom)) {
+                            System.out.println("This room is locked. You must fight the king to proceed.");
+                            System.out.println("Returning to previous room.");
+                            break;
+                        }
                         player.moveEast();
 
                         
@@ -191,6 +229,8 @@ public class GameData {
                     }
                     break;
         }
+        //after movement check if player is in final spot
+        checkWinCondition();
     }
 
     private void pickupItem() {
@@ -231,6 +271,7 @@ public class GameData {
 
     }
 
+    // Checks if there is an enemy to fight in the current room, then initiates combat
     private void fightEnemy() {
         Room room = getCurrentRoom();
 
@@ -251,12 +292,13 @@ public class GameData {
         }
     }
 
-    private void clearScreen() {
-        for (int i = 0; i < 50; i++) {
+    private void clearScreen() {        // moves old information off the scrren, 
+        for (int i = 0; i < 50; i++) {  // makes it easier to read the new information
             System.out.println();
         }
     }
 
+    // Commands displayed at the start of the game and when the player inputs "help"
     private void printInstructions() {
         System.out.println("\nCommands:");
         System.out.println("n/s/e/w - move");
@@ -266,5 +308,21 @@ public class GameData {
         System.out.println("fight - start combat");
         System.out.println("help - print this menu");
         System.out.println("quit - exit game");
+    }
+
+    /** Will check if player is in the room Treasure Room
+     * If so, the game will print this sequence and then end
+     */
+    private void checkWinCondition() {
+        Room room = getCurrentRoom();
+
+        if(room.getRoomName().equals("Treasure Room")) {
+            System.out.println(room.getRoomDescription());
+            System.out.println();
+            System.out.println("You have defeated the Dead King and claimed the treasure.");
+            System.out.println("====YOU WIN=====");
+
+            gameRunning = false;
+        }
     }
 }

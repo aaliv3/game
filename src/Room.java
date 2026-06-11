@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for player information such as:
+ * Room name, descriptions, locked status, NPCs/Enemy, items.
+ */
+
 public class Room {
     // Instance variables for items
     private String roomName; // room name
@@ -12,8 +17,12 @@ public class Room {
     private NPC npc; // which npc is in that room
     private boolean completed = false;
 
-    // Constructor
-    // missing npc hasMeet from constructor, might cause future issues, we will see..
+    /**
+     * Constructs a new Room object with the details:
+     * @param roomName               The name of the room
+     * @param roomDescription        The description which is displayed upon entering the room
+     * @param updatedRoomDescription An updated room description for when a certain requirement has been met
+     */
     public Room(String roomName, 
                 String roomDescription, 
                 String updatedRoomDescription) {
@@ -25,7 +34,11 @@ public class Room {
     public String getRoomName() {
         return roomName;
     }
-    
+
+    /**
+     * Check if the room has been completed and return either the original or updated room description.
+     * @return The room description to be displayed
+     */
     public String getRoomDescription() {
         if(completed) {
             return updatedRoomDescription;

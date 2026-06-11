@@ -1,5 +1,8 @@
+/**
+ * Class for item information such as:
+ * Item name, description, damage, healing.
+ */
 public class Items {
-
     //Creating instance variables for Items
     private String itemName;
     private String itemDescription;
@@ -7,7 +10,13 @@ public class Items {
     private int healingAmount;
 
 
-    //Using a Constructor so these parameters must be passed though and set to the instance variables above.
+    /**
+     * Constructs a new Items with the details:
+     * @param itemName        The display name for the item
+     * @param itemDescription The description of the item
+     * @param itemDamage      How much damage dealt when used as a weapon
+     * @param healingAmount   How much health recovered when used
+     */
     public Items(String itemName, String itemDescription, int itemDamage, int healingAmount) {
         this.itemName = itemName;
         this.itemDescription = itemDescription;

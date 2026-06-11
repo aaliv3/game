@@ -1,3 +1,7 @@
+/**
+ * Class for NPC information such as:
+ * NPC name, dialogue, item rewards.
+ */
 public class NPC {
     private String name;
     private String greeting;
@@ -5,6 +9,15 @@ public class NPC {
     private boolean hasSpoken;
     private Items reward;
     private boolean rewardGiven;
+
+    /**
+     * Constructs a new NPC with the details:
+     * @param name           The name of the NPC
+     * @param greeting       NPC dialogue for when the player greets them
+     * @param repeatGreeting NPC dialogue for repeat interactions
+     * @param hasSpoken      Declares if the NPC should use greeting or repeatGreeting when talked with
+     * @param reward         The item that the NPC gives to the player
+     */
 
     public NPC(String name, String greeting, String repeatGreeting, boolean hasSpoken,  Items reward) {
         this.name = name;
@@ -17,14 +30,6 @@ public class NPC {
 
     public String getName() {
         return name;
-    }
-
-    public String getGreeting() {
-        return greeting;
-    }
-
-    public String getRepeatGreeting() {
-        return repeatGreeting;
     }
 
     public String getDialogue() {

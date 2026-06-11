@@ -1,9 +1,18 @@
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * The combat loop and methods used for generating and dealing damage
+ */
 public class Combat {
 
     // Combat cycle
+
+    /**
+     * The main combat cycle
+     * @param player The Player in the fight
+     * @param enemy The Enemy in the fight
+     */
     public static void combat(Player player, Enemy enemy) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
@@ -11,13 +20,13 @@ public class Combat {
         int enemyAttack;
         int playerAttack;
 
-
         System.out.println("You have entered combat with " + enemy.getName() + "!");
+
         while (player.getHealth() > 0 && !enemy.isDefeated()) {
             System.out.println("You have " + player.getHealth() + " health remaining!\n");
             System.out.println("What do you want to do?");
             System.out.println("Do you want to (F)ight, (U)se an item or (R)un");
-            String combatDecision = scanner.nextLine().toLowerCase();
+            String combatDecision = scanner.nextLine().toLowerCase(); // .toLowerCase() is used so that either uppercase or lowercase input is accepted as identical
             boolean playerRun = false;
 
             if (combatDecision.equals("f")) {
@@ -29,7 +38,7 @@ public class Combat {
                         enemy.getName(), playerAttack, enemy.getName(), enemy.getHealth());
 
                 //this checks after player combat if enemy health is 0 or less, and if so sets the enemy to defeated
-                if(enemy.getHealth() <= 0) {
+                if (enemy.getHealth() <= 0) {
                     enemy.setDefeated(true);
                     System.out.println("You have slain the " + enemy.getName());
                     break;
